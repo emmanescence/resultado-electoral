@@ -16,8 +16,11 @@ archivo_csv = '2023_Generales/ResultadoElectorales_2023_Generales.csv'
 
 # Leer el archivo CSV extraído
 with zip_file_resultados.open(archivo_csv) as csv_file:
-    # Leer el CSV con low_memory=False para evitar el warning
-    csv_df = pd.read_csv(csv_file, low_memory=False)
+    # Leer solo las columnas necesarias
+    csv_df = pd.read_csv(csv_file, usecols=['distrito_nombre', 'circuito_id', 'cargo_nombre', 'agrupacion_nombre', 'votos_cantidad'], low_memory=False)
+
+# Filtrar por distrito_nombre igual a "Provincia de Buenos Aires"
+csv_df = csv_df[csv_df['distrito_nombre'] == 'Provincia de Buenos Aires']
 
 # Título de la aplicación
 st.title('Resultados Electorales 2023')
@@ -34,11 +37,11 @@ cargo_seleccionado = st.selectbox('Selecciona un Cargo:', cargos)
 df_filtrado = csv_df[csv_df['cargo_nombre'] == cargo_seleccionado]
 
 # Agregar un selectbox para seleccionar el circuito_id
-circuitos = df_filtrado['ciurcuito_id'].unique()
+circuitos = df_filtrado['circuito_id'].unique()
 circuito_seleccionado = st.selectbox('Selecciona un Circuito ID:', circuitos)
 
 # Filtrar los datos según el circuito seleccionado
-df_filtrado = df_filtrado[df_filtrado['ciurcuito_id'] == circuito_seleccionado]
+df_filtrado = df_filtrado[df_filtrado['circuito_id'] == circuito_seleccionado]
 
 # Agrupar por agrupacion_nombre y sumar votos_cantidad
 df_resultado = df_filtrado.groupby('agrupacion_nombre')['votos_cantidad'].sum().reset_index()
