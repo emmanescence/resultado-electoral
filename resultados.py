@@ -19,7 +19,7 @@ chunksize = 10**6  # Ajusta este tamaño según la capacidad de memoria disponib
 chunks = []
 for chunk in pd.read_csv(zip_file_resultados.open(archivo_csv), usecols=['distrito_nombre', 'circuito_id', 'cargo_nombre', 'agrupacion_nombre', 'votos_cantidad'], chunksize=chunksize, low_memory=False):
     # Filtrar cada chunk
-    chunk_filtered = chunk[chunk['distrito_nombre'] == 'Provincia de Buenos Aires']
+    chunk_filtered = chunk[chunk['distrito_nombre'] == 'Buenos Aires']
     chunks.append(chunk_filtered)
 
 # Concatenar todos los chunks
