@@ -16,7 +16,8 @@ archivo_csv = '2023_Generales/ResultadoElectorales_2023_Generales.csv'
 
 # Leer el archivo CSV extraído
 with zip_file_resultados.open(archivo_csv) as csv_file:
-    csv_df = pd.read_csv(csv_file)
+    # Leer el CSV con low_memory=False para evitar el warning
+    csv_df = pd.read_csv(csv_file, low_memory=False)
 
 # Título de la aplicación
 st.title('Resultados Electorales 2023')
