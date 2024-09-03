@@ -14,13 +14,16 @@ zip_file_resultados = zipfile.ZipFile(io.BytesIO(response.content))
 # Listar los archivos dentro del ZIP
 archivo_csv = '2023_Generales/ResultadoElectorales_2023_Generales.csv'
 
-# Leer el archivo CSV extraído
-with zip_file_resultados.open(archivo_csv) as csv_file:
-    # Leer solo las columnas necesarias
-    csv_df = pd.read_csv(csv_file, usecols=['distrito_nombre', 'circuito_id', 'cargo_nombre', 'agrupacion_nombre', 'votos_cantidad'], low_memory=False)
+# Leer el archivo CSV en chunks
+chunksize = 10**6  # Ajusta este tamaño según la capacidad de memoria disponible
+chunks = []
+for chunk in pd.read_csv(zip_file_resultados.open(archivo_csv), usecols=['distrito_nombre', 'circuito_id', 'cargo_nombre', 'agrupacion_nombre', 'votos_cantidad'], chunksize=chunksize, low_memory=False):
+    # Filtrar cada chunk
+    chunk_filtered = chunk[chunk['distrito_nombre'] == 'Provincia de Buenos Aires']
+    chunks.append(chunk_filtered)
 
-# Filtrar por distrito_nombre igual a "Provincia de Buenos Aires"
-csv_df = csv_df[csv_df['distrito_nombre'] == 'Provincia de Buenos Aires']
+# Concatenar todos los chunks
+csv_df = pd.concat(chunks, ignore_index=True)
 
 # Título de la aplicación
 st.title('Resultados Electorales 2023')
