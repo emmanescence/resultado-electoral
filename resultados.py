@@ -49,7 +49,17 @@ df_filtrado = df_filtrado[df_filtrado['circuito_id'] == circuito_seleccionado]
 # Agrupar por agrupacion_nombre y sumar votos_cantidad
 df_resultado = df_filtrado.groupby('agrupacion_nombre')['votos_cantidad'].sum().reset_index()
 
+# Calcular el total de votos en el circuito seleccionado
+total_votos = df_resultado['votos_cantidad'].sum()
+
+# Calcular el porcentaje de votos para cada agrupación
+df_resultado['porcentaje'] = (df_resultado['votos_cantidad'] / total_votos) * 100
+
 # Mostrar la tabla resultante
 st.write(f'**Resultados para el Cargo: {cargo_seleccionado} y Circuito ID: {circuito_seleccionado}**')
 st.dataframe(df_resultado)
+
+# Mostrar los resultados en un gráfico de barras
+st.write('**Gráfico de Resultados:**')
+st.bar_chart(df_resultado.set_index('agrupacion_nombre')['porcentaje'])
 
