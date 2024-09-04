@@ -26,6 +26,9 @@ for chunk in pd.read_csv(zip_file_resultados.open(archivo_csv), usecols=['distri
 # Concatenar todos los chunks
 csv_df = pd.concat(chunks, ignore_index=True)
 
+# Eliminar un cero a la izquierda en circuito_id
+csv_df['circuito_id'] = csv_df['circuito_id'].astype(str).str.lstrip('0')
+
 # Título de la aplicación
 st.title('Resultados Electorales 2023')
 
